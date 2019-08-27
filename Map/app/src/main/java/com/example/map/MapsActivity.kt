@@ -3,14 +3,12 @@ package com.example.map
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import com.example.myapplication.Data.LineResponse
 import com.example.myapplication.Data.RetrofitClient
+import com.example.myapplication.Data.RouteItem
+import com.google.android.gms.maps.*
 
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
@@ -47,35 +45,35 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     Toast.makeText(this@MapsActivity, "Get Status Success", Toast.LENGTH_LONG).show()
                 }
 
-                val gg = myResponse.body()?.route!!
-
-                val dataList= gg[0].coordinates
-
-//                Log.d("start", dataList.toString())
-//
-//                // Add markers
-//                val location1 = LatLng(dataList.coordinates!![0][0], dataList.coordinates[0][1])
-//                val location2 = LatLng(dataList.coordinates[66][0], dataList.coordinates[66][1])
-//
-//                mMap.addMarker(MarkerOptions().position(location1).title("Marker in Location1"))
-//                mMap.addMarker(MarkerOptions().position(location2).title("Marker in Location2"))
-
                 // Declare polyline object and set up color and width
                 val polylineOptions = PolylineOptions()
                 polylineOptions.color(Color.RED)
                 polylineOptions.width(5f)
 
+                val gg = myResponse.body()?.route!![0].coordinates
 
-//                polylineOptions.add(LatLng(1.0, 1.0))
-//                polylineOptions.add(LatLng(1.0, 1.0))
+                if (gg != null) {
+                    for (i in 0 until gg.size) {
+                        val lat = gg[i][0]
+                        val lng = gg[i][1]
+                        polylineOptions.add(LatLng(lat, lng))
+                    }
+                }
 
+                // Add markers
+                val location1 = LatLng(gg!![0][0], gg[0][1])
+                val location2 = LatLng(gg[gg.size-1][0], gg[gg.size-1][1])
 
+                val center = LatLng(gg[gg.size/2][0], gg[gg.size/2][1])
+
+                mMap.addMarker(MarkerOptions().position(location1).title("Marker in Location1"))
+                mMap.addMarker(MarkerOptions().position(location2).title("Marker in Location2"))
+
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(center, 13f))
                 mMap.addPolyline(polylineOptions)
 
-
             }
-
-        })
+          })
 
     }
 
