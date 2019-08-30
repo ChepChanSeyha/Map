@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.widget.Toast
 import com.example.myapplication.Data.LineResponse
 import com.example.myapplication.Data.RetrofitClient
-import com.example.myapplication.Data.RouteItem
 import com.google.android.gms.maps.*
 
 import com.google.android.gms.maps.model.LatLng
@@ -52,12 +51,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
                 val gg = myResponse.body()?.route!![0].coordinates
 
-                if (gg != null) {
-                    for (i in 0 until gg.size) {
-                        val lat = gg[i][0]
-                        val lng = gg[i][1]
-                        polylineOptions.add(LatLng(lat, lng))
-                    }
+                if (gg != null) for (i in 0 until gg.size) {
+                    val lat = gg[i][0]
+                    val lng = gg[i][1]
+                    polylineOptions.add(LatLng(lat, lng))
                 }
 
                 // Add markers
